@@ -49,7 +49,7 @@ const AddPage = () => {
       }
     console.log("Submitted Data: ", formData);
     try {
-        const response = await fetch("/api/upload", {
+        const response = await fetch(`${window.location.origin}/api/upload`, {
           method: "POST",
           body: formDataObj,
         });
