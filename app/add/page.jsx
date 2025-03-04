@@ -49,7 +49,9 @@ const AddPage = () => {
       }
     console.log("Submitted Data: ", formData);
     try {
-        const response = await fetch(`https://mc-vault.vercel.app/api/upload`, {
+        console.log(window.location.origin);
+        
+        const response = await fetch(`${window.location.origin}/api/upload`, {
           method: "POST",
           body: formDataObj,
         });

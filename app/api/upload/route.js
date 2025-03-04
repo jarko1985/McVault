@@ -4,8 +4,25 @@ import Document from "@/models/Document";
 import fs from "fs";
 import path from "path";
 
+export async function OPTIONS() {
+  return NextResponse.json({}, {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
+}
+
 export async function POST(req) {
   try {
+    const responseHeaders = new Headers({
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    });
+
     await connectToDatabase();
 
     const formData = await req.formData();
@@ -15,7 +32,10 @@ export async function POST(req) {
     const expiryDate = formData.get("expiryDate");
 
     if (!file || !name || !description || !expiryDate) {
-      return NextResponse.json({ error: "All fields are required" }, { status: 400 });
+      return new NextResponse(JSON.stringify({ error: "All fields are required" }), {
+        status: 400,
+        headers: responseHeaders,
+      });
     }
 
     // Convert file to buffer
