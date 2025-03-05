@@ -17,6 +17,7 @@ import { CalendarIcon } from "lucide-react";
 import toast from "react-hot-toast";
 
 const AddPage = () => {
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
@@ -32,6 +33,7 @@ const AddPage = () => {
 
   const handleDateChange = (date) => {
     setFormData((prev) => ({ ...prev, expiryDate: date }));
+    setIsCalendarOpen(false);
   };
 
   const handleFileChange = (e) => {
@@ -79,8 +81,8 @@ const AddPage = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label>Name</Label>
+            <div className='space-y-2'>
+              <Label >Name</Label>
               <Input
                 name="name"
                 value={formData.name}
@@ -88,7 +90,7 @@ const AddPage = () => {
                 required
               />
             </div>
-            <div>
+            <div className='space-y-2'>
               <Label>Description</Label>
               <Textarea
                 name="description"
@@ -97,13 +99,14 @@ const AddPage = () => {
                 required
               />
             </div>
-            <div>
+            <div className='space-y-2'>
               <Label>Date of Expiry</Label>
-              <Popover>
+              <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
                     className="w-full flex justify-between"
+                    onClick={() => setIsCalendarOpen((prev) => !prev)}
                   >
                     {formData.expiryDate
                       ? format(formData.expiryDate, "PPP")
@@ -120,7 +123,7 @@ const AddPage = () => {
                 </PopoverContent>
               </Popover>
             </div>
-            <div>
+            <div className='space-y-2'>
               <Label>Attach Document</Label>
               <Input type="file" onChange={handleFileChange} />
             </div>

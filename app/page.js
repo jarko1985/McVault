@@ -12,16 +12,16 @@ import {
 import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { Share2Icon } from "lucide-react";
+import { Share2Icon, DownloadIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import {BeatLoader} from 'react-spinners';
+import { BeatLoader } from "react-spinners";
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [isLoading,setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  //pagination logic
+  // Pagination logic
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -35,13 +35,26 @@ export default function Home() {
   useEffect(() => {
     async function fetchFiles() {
       setIsLoading(true);
-      const res = await fetch("/api/files");
-      const data = await res.json();
-      setUploadedFiles(data);
-      setIsLoading(false)
+      try {
+        const res = await fetch("/api/files");
+        const data = await res.json();
+        setUploadedFiles(data);
+      } catch (error) {
+        console.error("Error fetching files:", error);
+      }
+      setIsLoading(false);
     }
     fetchFiles();
   }, []);
+
+  const downloadFile = (fileUrl, fileName) => {
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const shareFile = (fileUrl) => {
     if (navigator.share) {
@@ -53,15 +66,18 @@ export default function Home() {
         })
         .catch((error) => console.error("Error sharing", error));
     } else {
-      window.open(
-        `https://wa.me/?text=${encodeURIComponent(fileUrl)}`,
-        "_blank"
-      );
+      window.open(`https://wa.me/?text=${encodeURIComponent(fileUrl)}`, "_blank");
     }
   };
-  if(isLoading){
-    return <div className="max-w-4xl mx-auto mt-32 flex justify-center items-center"><BeatLoader/></div>
+
+  if (isLoading) {
+    return (
+      <div className="max-w-4xl mx-auto mt-32 flex justify-center items-center">
+        <BeatLoader />
+      </div>
+    );
   }
+
   return (
     <div className="h-full p-6">
       <div className="max-w-4xl mx-auto mt-10">
@@ -69,11 +85,11 @@ export default function Home() {
           <CardHeader>
             <CardTitle>Uploaded Documents</CardTitle>
             <Input
-            placeholder="Search documents..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="mt-2"
-          />
+              placeholder="Search documents..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="mt-2"
+            />
           </CardHeader>
           <CardContent>
             <Table>
@@ -91,21 +107,19 @@ export default function Home() {
                     <TableRow key={file._id}>
                       <TableCell>{file.name}</TableCell>
                       <TableCell>{file.description}</TableCell>
-                      <TableCell>
-                        {format(new Date(file.expiryDate), "PPP")}
-                      </TableCell>
+                      <TableCell>{format(new Date(file.expiryDate), "PPP")}</TableCell>
                       <TableCell className="flex gap-x-2">
                         <Button
-                        className="cursor-pointer"
+                          className="cursor-pointer"
                           variant="outline"
-                          onClick={() => window.open(file.fileUrl, "_blank")}
+                          onClick={() => downloadFile(file.fileUrl, file.name)}
                         >
-                          Download
+                          <DownloadIcon className="mr-2 h-5 w-5" /> Download
                         </Button>
                         <Button
                           className="group cursor-pointer"
                           variant="outline"
-                          onClick={() => shareFile(file.url)}
+                          onClick={() => shareFile(file.fileUrl)}
                         >
                           <Share2Icon className="mr-2 h-5 w-5 group-hover:text-sky-500" />
                           Share
@@ -123,18 +137,24 @@ export default function Home() {
               </TableBody>
             </Table>
             <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} />
-              </PaginationItem>
-              <PaginationItem>
-                Page {currentPage} of {totalPages}
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    className='cursor-pointer'
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  />
+                </PaginationItem>
+                <PaginationItem>
+                  Page {currentPage} of {totalPages}
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext
+                    className='cursor-pointer'
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </CardContent>
         </Card>
       </div>
