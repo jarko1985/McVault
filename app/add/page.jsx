@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FcFolder } from "react-icons/fc";
 import {
   Popover,
   PopoverTrigger,
@@ -74,7 +75,7 @@ const AddPage = () => {
 
   return (
     <div className="max-w-6xl mx-auto pt-6">
-      <p>Please fill in the below and Attach the document</p>
+      <p className="text-center">Please fill in the below and Attach the document</p>
       <Card className="max-w-md mx-auto mt-10">
         <CardHeader>
           <CardTitle>Submit Document</CardTitle>
@@ -123,9 +124,9 @@ const AddPage = () => {
                 </PopoverContent>
               </Popover>
             </div>
-            <div className='space-y-2'>
+            <div className='space-y-2 relative'>
               <Label>Attach Document</Label>
-              <Input type="file" onChange={handleFileChange} />
+              <FcFolder size={25} className="absolute left-2 bottom-[-4px]"/><Input className='pl-10' type="file" onChange={handleFileChange} />
             </div>
             <div className="flex justify-between">
               <Button type="submit">Submit</Button>

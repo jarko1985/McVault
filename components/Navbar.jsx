@@ -13,23 +13,22 @@ const Navbar = () => {
   const { user, isSignedIn } = useUser();
   const router = useRouter();
   return (
-    <nav className="h-[64px] shadow-md px-4 flex items-center">
+    <nav className="h-[64px] shadow-md px-4 flex items-center w-full fixed top-0 left-0 bg-white z-50">
       <div className="flex items-center justify-between w-full max-w-6xl mx-auto">
         <Link className="flex items-center justify-center gap-2" href="/">
           {" "}
-          <p className="text-2xl font-bold">McVault</p>{" "}
+          <p className="text-2xl font-bold pulsate-bck-normal">McVault</p>{" "}
           <SiAmazondocumentdb size={35} />
         </Link>
-        <div className="flex items-center justify-center">
+        <div className="md:flex items-center justify-center hidden">
           <Image src={Logo} alt="Mccoin Logo" />
         </div>
         <ul className="flex gap-4 items-center">
           <li className="flex items-center">
-            <Button className="cursor-pointer" disabled={!isSignedIn} onClick={()=>router.push('/add')} variant="outline">
+            <Button className="cursor-pointer mx-2" disabled={!isSignedIn} onClick={()=>router.push('/add')} variant="outline">
               <FiFolderPlus
                 size={40}
                 color="green"
-                
               />
             </Button>
           </li>

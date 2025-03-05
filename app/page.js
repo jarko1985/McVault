@@ -110,11 +110,11 @@ export default function Home() {
                       <TableCell>{format(new Date(file.expiryDate), "PPP")}</TableCell>
                       <TableCell className="flex gap-x-2">
                         <Button
-                          className="cursor-pointer"
+                          className="group cursor-pointer"
                           variant="outline"
                           onClick={() => downloadFile(file.fileUrl, file.name)}
                         >
-                          <DownloadIcon className="mr-2 h-5 w-5" /> Download
+                          <DownloadIcon className="group-hover:text-green-500 mr-2 h-5 w-5" /> Download
                         </Button>
                         <Button
                           className="group cursor-pointer"
