@@ -20,7 +20,7 @@ async function checkAndSendEmail(){
     if(expiringDocuments.length>0){
         let emailContent  = "The following documents have expired or are expiring today:\n\n";
         expiringDocuments.forEach((doc) => {
-            emailContent += `📌 ${doc.name} (Expires on: ${new Date(doc.expiryDate).toDateString()})\n`;
+            emailContent += `📌 ${doc.name} (Expires on: ${new Date(doc.expiryDate).toDateString()})\n available to view ${doc.fileUrl} \n`;
           });
           await sendEmail(process.env.EMAIL_RECIPIENT, "Expiring Documents Alert", emailContent);
     }
